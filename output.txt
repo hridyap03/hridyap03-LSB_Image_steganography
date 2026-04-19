@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <string.h>
+#include "encode.h"
+#include "decode.h"
+#include "types.h"
+
+OperationType check_operation_type(char *argv[]);
+
+int main(int argc, char *argv[])
+
+{
+    
+    if(argc<3)
+    {
+        printf("Error : Insufficient argument count\n");
+        return e_failure;
+    }
+    OperationType option = check_operation_type(argv);
+   
+    if (option == e_encode)
+    {  
+        EncodeInfo encInfo; 
+        if(argc<4)
+        {
+            printf("Error : Insufficient argument count\n");
+        }
+       
+
+        if (read_and_validate_encode_args(argv, &encInfo) == e_failure)
+        {
+            printf("Encoding validation unsuccessful\n");
+            return e_failure;
+        }
+        printf("-------------Selected mode is encoding-------------\n");
+       
+        if(do_encoding(&encInfo) == e_success)
+        {
+        printf("-------------Encoding successful-------------\n");
+        }
+        else
+        {
+            printf("-------------Encoding unsuccessful-------------");
+        }
+    }
+
+    else if (option == e_decode)
+    {
+        DecodeInfo decInfo;
+        if (argc < 3)
+        {
+            printf("Error : Insufficient argument count");
+        }
+        // printf("Selected mode is decoding\n");
+        if (read_and_validate_decode_args(argv, &decInfo) == e_failure)
+        {
+
+            printf("Decoding validation unsuccessful\n");
+            return e_failure;
+        }
+        printf("-------------Selected mode is decoding-------------\n");
+        
+        if(do_decoding(&decInfo) == e_success)
+        {
+        printf("-------------Decoding successful-------------\n");
+        }
+        else
+        {
+            printf("-------------Decoding unsuccessful-------------\n");
+        }
+    }
+    else
+    {
+        printf("unsupported\n");
+    }
+}
+
+// Step 1 : Check the argc >= 4 true - > step 2
+// Step 2 : Call the check_operation_type(argv[1]) == e_encode )) true - > step 3
+// Step 3 : Declare structure variable EncodeInfo enc_info
+// Step 4 : Call the read_and_validate_encode_args(argv,&enc_info)== e_success)
+//  true -> Step 5 , false - > terminate the program
+// Step 5 : Call the do_encoding (&encInfo);
+
+OperationType check_operation_type(char *argv[])
+{
+    // Step 1 : Check whether the symbol is -e or not true - > return e_encode false -> Step 2
+    // Step 2 : Check whether the symbol is -d or not true - > return e_decode false -> return e_unsupported
+
+
+    if ((strcmp(argv[1], "-e")) == 0)
+    {
+        return e_encode;
+    }
+    else if ((strcmp(argv[1], "-d")) == 0)
+    {
+        return e_decode;
+    }
+    else
+    {
+        return e_unsupported;
+    }
+}

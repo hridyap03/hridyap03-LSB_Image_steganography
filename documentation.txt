@@ -1,0 +1,59 @@
+#ifndef DECODE_H
+#define DECODE_H
+#include <stdio.h>
+#include "common.h"
+#include "types.h" // Contains user defined types
+
+typedef struct _DecodeInfo
+{
+    /* Output File Info */
+    char output_file_name[20]; // To store the output file name
+    FILE *fptr_output_txt;     // To store the output file address
+
+    char extn_secret_file[5]; // To store the output file extension
+    int extn_secret_file_size;
+    long size_secret_file; // To store the size of the secret data
+
+    int magic_string_size;
+    char magic_string[20];
+
+    /* Stego Image Info */
+    char *stego_image_fname; // To store the stego file name
+    FILE *fptr_stego_image;  // To store the address of stego image
+
+} DecodeInfo;
+
+/* Decoding function prototype */
+
+/* Read and validate Decode args from argv */
+Status read_and_validate_decode_args(char *argv[], DecodeInfo *decInfo);
+
+/* Perform the decoding */
+Status do_decoding(DecodeInfo *decInfo);
+
+/* skip bmp image header */
+Status skip_bmp_header(DecodeInfo *decInfo);
+
+Status decode_magic_string_size(int *size, DecodeInfo *decInfo);
+/* decode Magic String */
+Status decode_magic_string(char *magic_string, DecodeInfo *decInfo);
+
+/*decode extension size*/
+Status decode_secret_file_extn_size(int *size, DecodeInfo *decInfo);
+
+/* decode secret file extenstion */
+Status decode_secret_file_extn(char *file_extn, DecodeInfo *decInfo);
+
+/* decode secret file size */
+Status decode_secret_file_size(long *file_size, DecodeInfo *decInfo);
+
+/* decode secret file data*/
+Status decode_secret_file_data(DecodeInfo *decInfo);
+
+/* deccode a byte from LSB of image data array */
+Status decode_byte_from_lsb(char *data, FILE *image_buffer);
+
+// decode a size from lsb
+Status decode_size_from_lsb(int *size, FILE *imageBuffer);
+
+#endif
